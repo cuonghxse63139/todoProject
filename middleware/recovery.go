@@ -13,7 +13,6 @@ import (
 func Recover() gin.RecoveryFunc {
 	return func(c *gin.Context, recovered interface{}) {
 		msg := ""
-
 		switch e := recovered.(type) {
 		case string:
 			msg = "recovered (string) panic:" + e
