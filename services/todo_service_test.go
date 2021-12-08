@@ -41,7 +41,7 @@ func TestUpdateTodoError1(t *testing.T) {
 	repo := mock.TodoRepositoryError{}
 	service := services.TodoServiceStruct{}
 	service.InitWith(&repo)
-	_, error := service.UpdateTodo(&entities.Todo{})
+	_, error := service.UpdateTodo(nil)
 	if error == nil {
 		t.Error("Expect error but got nil")
 	}
@@ -58,7 +58,7 @@ func TestDeleteTodoError1(t *testing.T) {
 }
 
 func TestGetListTodoByUserIdSuccess1(t *testing.T) {
-	repo := mock.TodoRepositoryError{}
+	repo := mock.TodoRepositorySuccess{}
 	service := services.TodoServiceStruct{}
 	service.InitWith(&repo)
 	_, error := service.GetListTodoByUserId(1)
@@ -68,7 +68,7 @@ func TestGetListTodoByUserIdSuccess1(t *testing.T) {
 }
 
 func TestInsertTodoSuccess1(t *testing.T) {
-	repo := mock.TodoRepositoryError{}
+	repo := mock.TodoRepositorySuccess{}
 	service := services.TodoServiceStruct{}
 	service.InitWith(&repo)
 	_, error := service.InsertTodo(&entities.Todo{})
@@ -78,7 +78,7 @@ func TestInsertTodoSuccess1(t *testing.T) {
 }
 
 func TestUpdateTodoSuccess1(t *testing.T) {
-	repo := mock.TodoRepositoryError{}
+	repo := mock.TodoRepositorySuccess{}
 	service := services.TodoServiceStruct{}
 	service.InitWith(&repo)
 	_, error := service.UpdateTodo(&entities.Todo{})
@@ -88,7 +88,7 @@ func TestUpdateTodoSuccess1(t *testing.T) {
 }
 
 func TestDeleteTodoSuccess1(t *testing.T) {
-	repo := mock.TodoRepositoryError{}
+	repo := mock.TodoRepositorySuccess{}
 	service := services.TodoServiceStruct{}
 	service.InitWith(&repo)
 	_, error := service.DeleteTodo(1)
