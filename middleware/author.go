@@ -49,6 +49,7 @@ func CheckToken() gin.HandlerFunc {
 
 		if isOk {
 			c.Set(config.TOKEN_CURRENT_USER_ID, claims[config.TOKEN_CURRENT_USER_ID])
+			c.Set(config.TOKEN_CURRENT_USERNAME, claims[config.TOKEN_CURRENT_USERNAME])
 			c.Set(config.TOKEN_CURRENT_USER_ROLE, claims[config.TOKEN_CURRENT_USER_ROLE])
 		} else {
 			log.Panicf("Cannot extract claims from token %s\n", reqToken)
