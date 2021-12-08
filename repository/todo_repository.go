@@ -63,7 +63,7 @@ func (repo *TodoRepositoryStruct) GetByTodoIdAndUserId(todoId int64, userID int6
 
 func (repo *TodoRepositoryStruct) InsertTodo(todo *entities.Todo) (entities.Todo, error) {
 	db := repo.dbHandler.GetDb()
-	row, error := db.Exec("SET IDENTITY_INSERT Todo OFF INSERT INTO Todo(title, todo_content, status, user_id) VALUES (?, ?, ?, ?)", todo.Title, todo.Content, todo.Status, todo.UserId)
+	row, error := db.Exec("INSERT INTO Todo(title, todo_content, status, user_id) VALUES (?, ?, ?, ?)", todo.Title, todo.Content, todo.Status, todo.UserId)
 
 	if error != nil {
 		log.Println(error)
