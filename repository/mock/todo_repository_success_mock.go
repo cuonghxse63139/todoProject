@@ -27,7 +27,3 @@ func (TodoRepositorySuccess) InsertTodo(todo *entities.Todo) (entities.Todo, err
 func (TodoRepositorySuccess) CloseConnection() error {
 	return nil
 }
-
-func (TodoRepositorySuccess) Init() error {
-	return nil
-}

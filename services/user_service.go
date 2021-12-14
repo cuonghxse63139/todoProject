@@ -12,7 +12,6 @@ import (
 )
 
 type UserAccountService interface {
-	Init() error
 	Login(user entities.User) (dtos.LoginDTO, error)
 }
 
@@ -20,14 +19,8 @@ type UserAccountServiceStruct struct {
 	repository repository.UserRepository
 }
 
-func (service *UserAccountServiceStruct) Init() error {
-	tempRepo := &repository.UserRepositoryStruct{}
-	service.repository = tempRepo
-	return service.repository.Init()
-}
-
-func (service *UserAccountServiceStruct) InitWith(repository repository.UserRepository) {
-	service.repository = repository
+func NewUserService(userRepo repository.UserRepository) *UserAccountServiceStruct {
+	return &UserAccountServiceStruct{repository: userRepo}
 }
 
 func (service *UserAccountServiceStruct) Login(user entities.User) (dtos.LoginDTO, error) {

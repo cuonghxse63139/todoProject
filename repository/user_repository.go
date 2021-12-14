@@ -7,7 +7,6 @@ import (
 )
 
 type UserRepository interface {
-	Init() error
 	Login(user entities.User) (entities.User, error)
 }
 
@@ -15,15 +14,13 @@ type UserRepositoryStruct struct {
 	dbHandler dbConnention.DBConnection
 }
 
-func (repo *UserRepositoryStruct) Init() error {
-	tempDb := &dbConnention.DBConnectionStruct{}
-	repo.dbHandler = tempDb
-	error := repo.dbHandler.Open()
-
-	return error
+func NewUserRepository(db dbConnention.DBConnection) (*UserRepositoryStruct, error) {
+	repo := &UserRepositoryStruct{}
+	repo.dbHandler = db
+	return repo, db.Open()
 }
 
-func (repo *UserRepositoryStruct) Login(user entities.User) (entities.User, error){
+func (repo *UserRepositoryStruct) Login(user entities.User) (entities.User, error) {
 	db := repo.dbHandler.GetDb()
 	row := db.QueryRow("Select * from Users where username = ? and password = ? ", user.Username, user.Password)
 
@@ -38,10 +35,10 @@ func (repo *UserRepositoryStruct) Login(user entities.User) (entities.User, erro
 	}
 
 	result := entities.User{
-		Id:     id,
-		Username:    username,
+		Id:       id,
+		Username: username,
 		Password: password,
-		Role: role,
+		Role:     role,
 	}
 
 	if error != nil {

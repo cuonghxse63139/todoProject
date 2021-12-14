@@ -16,18 +16,16 @@ type TodoRepository interface {
 	DeleteTodo(id int64) (int64, error)
 	InsertTodo(todo *entities.Todo) (entities.Todo, error)
 	CloseConnection() error
-	Init() error
 }
 
 type TodoRepositoryStruct struct {
 	dbHandler dbConnention.DBConnection
 }
 
-func (repo *TodoRepositoryStruct) Init() error {
-	tempDB := &dbConnention.DBConnectionStruct{}
-	repo.dbHandler = tempDB
-	error := repo.dbHandler.Open()
-	return error
+func NewTodoRepository(db dbConnention.DBConnection) (*TodoRepositoryStruct, error) {
+	repo := &TodoRepositoryStruct{}
+	repo.dbHandler = db
+	return repo, db.Open()
 }
 
 func (repo *TodoRepositoryStruct) CloseConnection() error {
@@ -63,7 +61,7 @@ func (repo *TodoRepositoryStruct) GetByTodoIdAndUserId(todoId int64, userID int6
 
 func (repo *TodoRepositoryStruct) InsertTodo(todo *entities.Todo) (entities.Todo, error) {
 	db := repo.dbHandler.GetDb()
-	row, error := db.Exec("INSERT INTO Todo(title, todo_content, status, user_id) VALUES (?, ?, ?, ?)", todo.Title, todo.Content, todo.Status, todo.UserId)
+	row, error := db.Exec("INSERT INTO Todo(title, todo_content, status, user_id) VALUES (?, ?, ?, ?) select ID = convert(bigint, SCOPE_IDENTITY())", todo.Title, todo.Content, todo.Status, todo.UserId)
 
 	if error != nil {
 		log.Println(error)

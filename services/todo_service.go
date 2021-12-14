@@ -7,7 +7,6 @@ import (
 )
 
 type TodoService interface {
-	Init() error
 	GetListTodoByUserId(userId int64) ([]entities.Todo, error)
 	InsertTodo(todo *entities.Todo) (entities.Todo, error)
 	DeleteTodo(id int64) (int64, error)
@@ -18,14 +17,8 @@ type TodoServiceStruct struct {
 	repository repository.TodoRepository
 }
 
-func (service *TodoServiceStruct) Init() error {
-	tempRepo := &repository.TodoRepositoryStruct{}
-	service.repository = tempRepo
-	return service.repository.Init()
-}
-
-func (service *TodoServiceStruct) InitWith(repository repository.TodoRepository) {
-	service.repository = repository
+func NewTodoService(todoRepo repository.TodoRepository) *TodoServiceStruct {
+	return &TodoServiceStruct{repository: todoRepo}
 }
 
 func (service *TodoServiceStruct) GetListTodoByUserId(userId int64) ([]entities.Todo, error) {

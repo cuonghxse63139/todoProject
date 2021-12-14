@@ -16,6 +16,11 @@ type DBConnectionStruct struct {
 	db *sql.DB
 }
 
+func NewDBConnecttion() *DBConnectionStruct {
+	temp := &DBConnectionStruct{}
+	return temp
+}
+
 func (dbs *DBConnectionStruct) Open() error {
 	log.Println("Open connection to DB")
 	tempDb, err := sql.Open("mssql", "server=localhost;user id=sa;password=123456;database=TodoDB")

@@ -7,10 +7,12 @@ import (
 	"log"
 	"net/http"
 	"strconv"
-	"todoProject/config"
+	"todoProject/dbConnention"
 	"todoProject/dtos"
 	"todoProject/entities"
+	"todoProject/repository"
 	"todoProject/services"
+	"todoProject/unit"
 )
 
 type TodoController interface {
@@ -24,10 +26,19 @@ type TodoControllerStruct struct {
 	service services.TodoService
 }
 
+func NewTodoController() *TodoControllerStruct {
+	return &TodoControllerStruct{}
+}
+
 func (controller *TodoControllerStruct) init() error {
-	tempService := &services.TodoServiceStruct{}
-	controller.service = tempService
-	return controller.service.Init()
+	db := dbConnention.NewDBConnecttion()
+	repo, error := repository.NewTodoRepository(db)
+	if error != nil {
+		log.Println(error)
+		return error
+	}
+	controller.service = services.NewTodoService(repo)
+	return nil
 }
 
 func (controller *TodoControllerStruct) GetTodo(c *gin.Context) {
@@ -35,7 +46,7 @@ func (controller *TodoControllerStruct) GetTodo(c *gin.Context) {
 		log.Println(error)
 		return
 	}
-	userId, err := getUserId(c)
+	userId, err := unit.GetUserId(c)
 	if err != nil {
 		handleBadRequest(
 			c,
@@ -83,7 +94,7 @@ func (controller *TodoControllerStruct) InsertTodo(c *gin.Context) {
 		)
 		return
 	}
-	userId, err := getUserId(c)
+	userId, err := unit.GetUserId(c)
 	if err != nil {
 		handleBadRequest(
 			c,
@@ -126,7 +137,7 @@ func (controller *TodoControllerStruct) UpdateTodo(c *gin.Context) {
 		)
 		return
 	}
-	userId, err := getUserId(c)
+	userId, err := unit.GetUserId(c)
 	if err != nil {
 		handleBadRequest(
 			c,
@@ -183,17 +194,4 @@ func (controller *TodoControllerStruct) DeleteTodo(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusCreated, rowEffect)
-}
-
-func getUserId(c *gin.Context) (int64, error) {
-	var userId int64
-	var error error
-	temp, isOk := c.Get(config.TOKEN_CURRENT_USER_ID)
-	if isOk {
-		userId, error = strconv.ParseInt(fmt.Sprint(temp), 10, 64)
-		if error == nil {
-			return userId, nil
-		}
-	}
-	return 0, nil
 }

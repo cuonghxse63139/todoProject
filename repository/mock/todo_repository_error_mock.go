@@ -16,15 +16,11 @@ func (repo *TodoRepositoryError) GetByTodoIdAndUserId(todoId int64, userID int64
 }
 
 func (repo *TodoRepositoryError) DeleteTodo(id int64) (int64, error) {
-	panic("implement me")
-}
-
-func (repo *TodoRepositoryError) Init() error {
-	return nil
+	return 0, errors.New("ERROR")
 }
 
 func (repo *TodoRepositoryError) CloseConnection() error {
-	return nil
+	return errors.New("ERROR")
 }
 
 func (repo *TodoRepositoryError) InsertTodo(todo *entities.Todo) (entities.Todo, error) {

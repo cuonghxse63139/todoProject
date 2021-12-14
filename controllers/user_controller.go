@@ -3,8 +3,10 @@ package controllers
 import (
 	"github.com/gin-gonic/gin"
 	"log"
+	"todoProject/dbConnention"
 	"todoProject/dtos"
 	"todoProject/entities"
+	"todoProject/repository"
 	"todoProject/services"
 )
 
@@ -16,10 +18,19 @@ type UserControllerStruct struct {
 	service services.UserAccountService
 }
 
+func NewUserController() *UserControllerStruct {
+	return &UserControllerStruct{}
+}
+
 func (controller *UserControllerStruct) init() error {
-	tempService := &services.UserAccountServiceStruct{}
-	controller.service = tempService
-	return controller.service.Init()
+	db := dbConnention.NewDBConnecttion()
+	repo, error := repository.NewUserRepository(db)
+	if error != nil {
+		log.Println(error)
+		return error
+	}
+	controller.service = services.NewUserService(repo)
+	return nil
 }
 
 func (controller *UserControllerStruct) Login(c *gin.Context) {
